@@ -1,33 +1,24 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <string>
 
+#include "CodeCore.h"
+#include "FileCore.h"
+#include "Arguments.h"
 
-
+/// namespace InputHandle
+/**
+ѕространство имен InputHandle содержит классы дл€ обработки комманд, поступающих через аргументы заппуска (командной строки)
+“акже содержит класс Controller - выполненный по шаблону  онтроллер - который исход€ из поступивших аргументов вызывает
+методы классов пространства имен CodeCore - дл€ кодировани€, и namespace FileCore - дл€ работы с файловой системой
+*/
 namespace InputHandle
-{
-
-
-	class Arguments
-	{
-		std::string _path;
-		std::string _password;
-		enum class _CryptType { CEASER, DES, AES } _crypt_type;
-		std::string _new_name;
-	public:
-		std::vector <std::string> arguments_vec;
-		Arguments(int argc, char* argv[])
-		{
-			for (int count{ 0 }; count < argc; ++count)
-			{
-				arguments_vec.push_back(argv[count]);
-			}
-			if (arguments_vec.size()) _path = arguments_vec[0];
-
-		}
-
-	};
-
+{	
+	///”правл€ет работой приложени€
+	/**
+	¬ыполнен по шаблону  онтроллер - содержит основную логику управлени€ работой приложени€
+	*/
 	class Controller
 	{
 	public:
@@ -35,35 +26,105 @@ namespace InputHandle
 		{
 			Arguments* current_arguments = new Arguments(argc, argv);
 			
-						
-			std::cout << "There are " << argc << " arguments:\n";
-
-			// ѕеребираем все аргументы и
-			// выводим номер и значение каждого из них
+			try
+			{
+				current_arguments->Are_Arguments_valid();
+			}
+			catch (int exc_num)
+			{
+				COUT_Help();
+				std::exit(1);
+			}
 			
+
+			
+			//*
+			std::cout << "There are " << argc << " arguments:\n";		
 			for (int i{ 0 }; i < current_arguments->arguments_vec.size(); ++i)
 				std::cout << current_arguments->arguments_vec[i] << "\n";
+			//*/
 
-			
 
 
+			/// ѕередача управлени€ в главную функцию класса
 			Control(current_arguments);
 
 
 
-
-
-	/*		for (int count{ 0 }; count < argc; ++count)
-			{
-				std::cout << count << ' ' << argv[count] << '\n';
-			}*/
 		}
-		static void Control(Arguments* current_arguments)
+		static void Control(const Arguments* current_arguments)
 		{
+			
+			
+			CodeCore::Crypto_Interface* crypto_obj_ptr = nullptr;
+			switch (current_arguments->_algo_type)
+			{
+			case Arguments::_AlgoType::help:
+				COUT_Help();
+				break;
+			case Arguments::_AlgoType::CEASER:
 
+				crypto_obj_ptr = new CodeCore::Ceaser_Cryptor();
+
+				break;
+			case Arguments::_AlgoType::DES:
+				crypto_obj_ptr = new CodeCore::DES_Cryptor();
+				break;
+			}
+
+
+			switch (current_arguments->_action_type)
+			{
+			case Arguments::_ActionType::encrypt: 
+				{
+					FileCore::Encrypt_Stream encrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name);
+					bool status = crypto_obj_ptr->Encrypt(encrypt_stream_maker.Get_read_stream(), encrypt_stream_maker.Get_write_stream());
+					std::cout << (status ? "\nEncryption succesfull\n" : "\nEncryption failed\n");
+					break;
+				}
+			case Arguments::_ActionType::decrypt: 
+				{
+					FileCore::Decrypt_Stream decrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name);
+					bool status = crypto_obj_ptr->Decrypt(decrypt_stream_maker.Get_read_stream(), decrypt_stream_maker.Get_write_stream());
+					std::cout << (status ? "\nDecryption succesfull\n" : "\nDecryption failed\n");
+					break;
+				}
+			}
+
+
+
+
+			// не хочет удал€ть объект, вроде € его создал - мне и удал€ть??? 
+			// Exception thrown at 0x00007FFA6AEAB1ED (ucrtbased.dll) in IDA_TOP_Encryptor.exe: 0xC0000005: Access violation reading location 0x0000000100000000.
+			// A breakpoint instruction (__debugbreak() statement or a similar call) was executed in IDA_TOP_Encryptor.exe.
+			//delete crypto_obj_ptr;
 		}
-	};
+		
+		static void COUT_Help()
+		{
+			std::cout << "\n\n///Program keys\n\n";
 
+			std::cout << std::endl << "--- HELP";
+			std::cout << std::endl << "/? -";
+			std::cout << std::endl << "/h";
+			std::cout << std::endl << "/help";
+			std::cout << std::endl << "/help?";
+
+			std::cout << std::endl << "--- Encryption";
+			std::cout << std::endl << "/action=1:encryption";
+			std::cout << std::endl << "+ /path=\"filename.txt\"";
+			std::cout << std::endl << "+ /password=\"password\"";
+			std::cout << std::endl << "+ [/algo=(1:CEASER,2:DES, 3:AES)] // default - CEASER";
+			std::cout << std::endl << "+ [/name=\"new_filename\"] //default name=\"#filename_encrypt_#algorithm\"]";
+
+			std::cout << std::endl << "--- Decryption";
+			std::cout << std::endl << "/action=2:decryption";
+			std::cout << std::endl << "+ /path=\"filename.txt\"";
+			std::cout << std::endl << "+ /password=\"password\"";
+			std::cout << std::endl << "+ [/name=\"new_file_name\"] // default name=\"#filename_decrypt_#algorithm\"]";
+		}
+
+	};
 
 }
 

@@ -1,0 +1,1 @@
+Defualt generated test file with test text, just because cannot open sample.txt
