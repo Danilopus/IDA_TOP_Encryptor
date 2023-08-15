@@ -129,13 +129,19 @@
   <ItemGroup>
     <ClCompile Include="!_Main.cpp" />
     <ClCompile Include="Arguments.cpp" />
+    <ClCompile Include="CodeCore.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="FileCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arguments.h" />
     <ClInclude Include="CodeCore.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="FileCore.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

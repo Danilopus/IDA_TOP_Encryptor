@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <fstream>
 
@@ -15,57 +15,23 @@ namespace CodeCore
 	{
 	public:
 
-		bool Encrypt(std::ifstream& read_stream, std::ofstream& write_stream) override
-		{
-			std::string tmp_str;
-			while (!read_stream.eof())
-			{			
-				char ch = EncryptionEngine(read_stream.get());
-				if (ch != 2) tmp_str += ch;
-				//write_stream << CryptoEngine(read_stream.get());
-			}
-			write_stream << tmp_str;
-			//write_stream << tmp_str.c_str();
-			return true;
-		}
+		bool Encrypt(std::ifstream& read_stream, std::ofstream& write_stream) override;
 
-		bool Decrypt(std::ifstream& read_stream, std::ofstream& write_stream) override
-		{
-			std::string tmp_str;
-			while (read_stream.eof() != 1)
-			{
-				char ch = DecryptionEngine(read_stream.get());
-				if (ch != -4) tmp_str += ch;				
-			}
-			write_stream << tmp_str;
-			//write_stream << tmp_str.c_str();
-			return true;
-		}
+		bool Decrypt(std::ifstream& read_stream, std::ofstream& write_stream) override;
 
-
-		/// Êðèïòîãðàôè÷åñêèé äâèæîê ýòîãî êëàññà
+		/// ÐšÑ€Ð¸Ð¿Ñ‚Ð¾Ð³Ñ€Ð°Ñ„Ð¸Ñ‡ÐµÑÐºÐ¸Ð¹ Ð´Ð²Ð¸Ð¶Ð¾Ðº ÑÑ‚Ð¾Ð³Ð¾ ÐºÐ»Ð°ÑÑÐ°
 		/**
-		Âîçðàùàåò ñèìâîë ñ êîäîì +3 îò âõîäÿùåãî, åñëè ýòî íå ïðîáåë
+		Ð’Ð¾Ð·Ñ€Ð°Ñ‰Ð°ÐµÑ‚ ÑÐ¸Ð¼Ð²Ð¾Ð» Ñ ÐºÐ¾Ð´Ð¾Ð¼ +3 Ð¾Ñ‚ Ð²Ñ…Ð¾Ð´ÑÑ‰ÐµÐ³Ð¾, ÐµÑÐ»Ð¸ ÑÑ‚Ð¾ Ð½Ðµ Ð¿Ñ€Ð¾Ð±ÐµÐ»
 		*/
-		char EncryptionEngine(char ch)
-		{
-			return ch != 32 ? ch + 3 : ch;
-		}
-		char DecryptionEngine(char ch)
-		{
-			return ch != 32 ? ch - 3 : ch;
-		}
+		char EncryptionEngine(char ch);
+		char DecryptionEngine(char ch);
 	};
 
+	/// ÐŸÑ€Ð¾ÐµÐºÑ‚ ÐºÐ»Ð°ÑÑÐ°, Ð¿Ð¾ÐºÐ° Ð¿Ñ€Ð¾ÑÑ‚Ð¾ Ð¿ÑƒÑÑ‚Ñ‹ÑˆÐºÐ°
 	class DES_Cryptor : virtual public Crypto_Interface
 	{
-		bool Decrypt(std::ifstream& read_stream, std::ofstream& write_stream) override { return false; }
-		
-			bool Encrypt(std::ifstream& read_stream, std::ofstream& write_stream) override
-		{
-			return false;
-		}		
-
+		bool Decrypt(std::ifstream& read_stream, std::ofstream& write_stream) override { return false; }		
+		bool Encrypt(std::ifstream& read_stream, std::ofstream& write_stream) override	{return false;}	
 	};
 
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,120 +9,25 @@
 
 /// namespace InputHandle
 /**
-Ïðîñòðàíñòâî èìåí InputHandle ñîäåðæèò êëàññû äëÿ îáðàáîòêè êîììàíä, ïîñòóïàþùèõ ÷åðåç àðãóìåíòû çàïïóñêà (êîìàíäíîé ñòðîêè)
-Òàêæå ñîäåðæèò êëàññ Controller - âûïîëíåííûé ïî øàáëîíó Êîíòðîëëåð - êîòîðûé èñõîäÿ èç ïîñòóïèâøèõ àðãóìåíòîâ âûçûâàåò
-ìåòîäû êëàññîâ ïðîñòðàíñòâà èìåí CodeCore - äëÿ êîäèðîâàíèÿ, è namespace FileCore - äëÿ ðàáîòû ñ ôàéëîâîé ñèñòåìîé
+ÐŸÑ€Ð¾ÑÑ‚Ñ€Ð°Ð½ÑÑ‚Ð²Ð¾ Ð¸Ð¼ÐµÐ½ InputHandle ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ»Ð°ÑÑÑ‹ Ð´Ð»Ñ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ¸ ÐºÐ¾Ð¼Ð¼Ð°Ð½Ð´, Ð¿Ð¾ÑÑ‚ÑƒÐ¿Ð°ÑŽÑ‰Ð¸Ñ… Ñ‡ÐµÑ€ÐµÐ· Ð°Ñ€Ð³ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹ Ð·Ð°Ð¿Ð¿ÑƒÑÐºÐ° (ÐºÐ¾Ð¼Ð°Ð½Ð´Ð½Ð¾Ð¹ ÑÑ‚Ñ€Ð¾ÐºÐ¸)
+Ð¢Ð°ÐºÐ¶Ðµ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ»Ð°ÑÑ Controller - Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð½Ñ‹Ð¹ Ð¿Ð¾ ÑˆÐ°Ð±Ð»Ð¾Ð½Ñƒ ÐšÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð»ÐµÑ€ - ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð¸ÑÑ…Ð¾Ð´Ñ Ð¸Ð· Ð¿Ð¾ÑÑ‚ÑƒÐ¿Ð¸Ð²ÑˆÐ¸Ñ… Ð°Ñ€Ð³ÑƒÐ¼ÐµÐ½Ñ‚Ð¾Ð² Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚
+Ð¼ÐµÑ‚Ð¾Ð´Ñ‹ ÐºÐ»Ð°ÑÑÐ¾Ð² Ð¿Ñ€Ð¾ÑÑ‚Ñ€Ð°Ð½ÑÑ‚Ð²Ð° Ð¸Ð¼ÐµÐ½ CodeCore - Ð´Ð»Ñ ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ, Ð¸ namespace FileCore - Ð´Ð»Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹ Ñ Ñ„Ð°Ð¹Ð»Ð¾Ð²Ð¾Ð¹ ÑÐ¸ÑÑ‚ÐµÐ¼Ð¾Ð¹
 */
 namespace InputHandle
 {	
-	///Óïðàâëÿåò ðàáîòîé ïðèëîæåíèÿ
+	///Ð£Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ Ñ€Ð°Ð±Ð¾Ñ‚Ð¾Ð¹ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
 	/**
-	Âûïîëíåí ïî øàáëîíó Êîíòðîëëåð - ñîäåðæèò îñíîâíóþ ëîãèêó óïðàâëåíèÿ ðàáîòîé ïðèëîæåíèÿ
+	Ð’Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½ Ð¿Ð¾ ÑˆÐ°Ð±Ð»Ð¾Ð½Ñƒ ÐšÐ¾Ð½Ñ‚Ñ€Ð¾Ð»Ð»ÐµÑ€ - ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ Ð¾ÑÐ½Ð¾Ð²Ð½ÑƒÑŽ Ð»Ð¾Ð³Ð¸ÐºÑƒ ÑƒÐ¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ð¾Ð¹ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
 	*/
 	class Controller
 	{
 	public:
-		static void Initialise(int argc, char* argv[])
-		{
-			Arguments* current_arguments = new Arguments(argc, argv);
-			
-			try
-			{
-				current_arguments->Are_Arguments_valid();
-			}
-			catch (int exc_num)
-			{
-				COUT_Help();
-				std::exit(1);
-			}
-			
-
-			
-			//*
-			std::cout << "There are " << argc << " arguments:\n";		
-			for (int i{ 0 }; i < current_arguments->arguments_vec.size(); ++i)
-				std::cout << current_arguments->arguments_vec[i] << "\n";
-			//*/
-
-
-
-			/// Ïåðåäà÷à óïðàâëåíèÿ â ãëàâíóþ ôóíêöèþ êëàññà
-			Control(current_arguments);
-
-
-
-		}
-		static void Control(const Arguments* current_arguments)
-		{
-			
-			
-			CodeCore::Crypto_Interface* crypto_obj_ptr = nullptr;
-			switch (current_arguments->_algo_type)
-			{
-			case Arguments::_AlgoType::help:
-				COUT_Help();
-				break;
-			case Arguments::_AlgoType::CEASER:
-
-				crypto_obj_ptr = new CodeCore::Ceaser_Cryptor();
-
-				break;
-			case Arguments::_AlgoType::DES:
-				crypto_obj_ptr = new CodeCore::DES_Cryptor();
-				break;
-			}
-
-
-			switch (current_arguments->_action_type)
-			{
-			case Arguments::_ActionType::encrypt: 
-				{
-					FileCore::Encrypt_Stream encrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name);
-					bool status = crypto_obj_ptr->Encrypt(encrypt_stream_maker.Get_read_stream(), encrypt_stream_maker.Get_write_stream());
-					std::cout << (status ? "\nEncryption succesfull\n" : "\nEncryption failed\n");
-					break;
-				}
-			case Arguments::_ActionType::decrypt: 
-				{
-					FileCore::Decrypt_Stream decrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name);
-					bool status = crypto_obj_ptr->Decrypt(decrypt_stream_maker.Get_read_stream(), decrypt_stream_maker.Get_write_stream());
-					std::cout << (status ? "\nDecryption succesfull\n" : "\nDecryption failed\n");
-					break;
-				}
-			}
-
-
-
-
-			// íå õî÷åò óäàëÿòü îáúåêò, âðîäå ÿ åãî ñîçäàë - ìíå è óäàëÿòü??? 
-			// Exception thrown at 0x00007FFA6AEAB1ED (ucrtbased.dll) in IDA_TOP_Encryptor.exe: 0xC0000005: Access violation reading location 0x0000000100000000.
-			// A breakpoint instruction (__debugbreak() statement or a similar call) was executed in IDA_TOP_Encryptor.exe.
-			//delete crypto_obj_ptr;
-		}
-		
-		static void COUT_Help()
-		{
-			std::cout << "\n\n///Program keys\n\n";
-
-			std::cout << std::endl << "--- HELP";
-			std::cout << std::endl << "/? -";
-			std::cout << std::endl << "/h";
-			std::cout << std::endl << "/help";
-			std::cout << std::endl << "/help?";
-
-			std::cout << std::endl << "--- Encryption";
-			std::cout << std::endl << "/action=1:encryption";
-			std::cout << std::endl << "+ /path=\"filename.txt\"";
-			std::cout << std::endl << "+ /password=\"password\"";
-			std::cout << std::endl << "+ [/algo=(1:CEASER,2:DES, 3:AES)] // default - CEASER";
-			std::cout << std::endl << "+ [/name=\"new_filename\"] //default name=\"#filename_encrypt_#algorithm\"]";
-
-			std::cout << std::endl << "--- Decryption";
-			std::cout << std::endl << "/action=2:decryption";
-			std::cout << std::endl << "+ /path=\"filename.txt\"";
-			std::cout << std::endl << "+ /password=\"password\"";
-			std::cout << std::endl << "+ [/name=\"new_file_name\"] // default name=\"#filename_decrypt_#algorithm\"]";
-		}
+		static void Initialise(int argc, char* argv[]);
+		static void Control(const Arguments* current_arguments);		
+		static void COUT_Help();
+		// Ð’ Ð´Ð°Ð»ÑŒÐ½ÐµÐ¹ÑˆÐµÐ¼ ÐºÐ°Ðº-Ñ‚Ð¾ Ð°Ð²Ñ‚Ð¾Ð¼Ð°Ñ‚Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ Ð²Ñ‹Ð±Ð¾Ñ€Ð° ÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ð¾Ð±ÑŠÐµÐºÑ‚Ð° Ð´Ð»Ñ Ð¿Ñ€Ð¾ÑÑ‚Ð¾Ð³Ð¾ Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Ð½Ð¾Ð²Ñ‹Ñ… ÐºÐ»Ð°ÑÑÐ¾Ð²-ÑˆÐ¸Ñ„Ñ€Ð°Ñ‚Ð¾Ñ€Ð¾Ð²
+		static CodeCore::Crypto_Interface* _algo_type_handler(const Arguments::_AlgoType& _type);
+		static bool Do_action(const Arguments* current_arguments, CodeCore::Crypto_Interface* crypto_obj_ptr);
 
 	};
 
