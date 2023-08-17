@@ -11,6 +11,12 @@
 /** 
 * explanatory note
 * 
+* *** Изменения 18.08.2023:
+* - добавлены короткие версии всех параметров (для этого даже изменено имя одного из параметров path->file)
+* - добавлен параметр "режим работы" сохранения/удаления оригинального файла при шифрвании (дешифрации это не коснулось)
+* - также теперь для любителей полного синтаксиса есть возможность /action=encryption 
+* 
+* 
 *** Актуальное состояние 15.08.2023:
 * - компилируется
 * - работает с параметрами командной строки как отражено в /help
@@ -90,24 +96,7 @@ Protected Variations
 ///Program keys
 /**
 
-/? - вызов помощи
-/h
-/help
-/help?
-
-
-/action=encryption
-+ /path="filename.ext"
-+ /password="new_password"
-+ [/algo=(1|CEASER,2|DES, 3|AES)] // default - CEASER
-+ [/name="new_file_name"] //default - overwrite existing file
-
-
-/action=decryption
-+ /path="filename.ext"
-+ /password="new_password"
-+ [/name="new_file_name"] //otherwise - overwrite existing file
-
+see  Controller.cpp -> InputHandle::Controller::COUT_Help()
 
 */
 
@@ -117,17 +106,21 @@ Protected Variations
 Project->Properties->Configuration Properties->Debugging->Command Arguments:
 
 ---Encrypt
-/action=1 /path="sample.txt" /password="123" /algo=1 /name="sample_crypt.txt"
-/action=1 /path="sample.txt" /password="123"
+/action=1 /file="sample.txt" /password="123" /method=1 /name="sample_crypt.txt"
+/a=1 /f="sample.txt" /p="123" /m=1 /n="sample_crypt.txt" /r=1
 
-/path=1 /password=123
+
+/action=1 /file="sample.txt" /password="123"
+
+/file=1 /p=123
 
 
 ---Decrypt
-/action=2 /path="sample_crypt.txt" /password="123" /algo=1
+/action=2 /file="sample_crypt.txt" /password="123" /method=1
+/a=2 /f="sample_crypt.txt" /p="123" /m=1
 
 
-/path=1 /password=123
+/file=1 /p=123
 
 
 */

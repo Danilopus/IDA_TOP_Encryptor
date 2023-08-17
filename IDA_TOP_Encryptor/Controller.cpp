@@ -18,7 +18,7 @@ void InputHandle::Controller::Initialise(int argc, char* argv[])
 
 
 	//* Служебный режим - список аргументов
-	std::cout << "There are " << argc << " arguments:\n";
+	std::cout << "\nThere are " << argc << " arguments:\n";
 	for (int i{ 0 }; i < current_arguments->arguments_vec.size(); ++i)
 		std::cout << current_arguments->arguments_vec[i] << "\n";
 	//*/
@@ -52,20 +52,27 @@ void InputHandle::Controller::COUT_Help()
 	std::cout << std::endl << "/help";
 	std::cout << std::endl << "/help?";
 
-	std::cout << std::endl << "--- Encryption";
-	std::cout << std::endl << "/action=1:encryption";
-	std::cout << std::endl << "+ /path=\"filename.txt\"";
-	std::cout << std::endl << "+ /password=\"password\"";
-	// для динамического добавления алгортимов здесь надо как-то автоматизировать вывод информации о алгоритмах в наличии
-	std::cout << std::endl << "+ [/algo=(1:CEASER,2:DES, 3:AES)] // default - CEASER";
-	std::cout << std::endl << "+ [/name=\"new_filename\"] //default name=\"#filename_encrypt_#algorithm\"]";
+	std::cout << std::endl << "\n--- Encryption";
+	std::cout << std::endl << "  /a or /action=1:encryption";
+	std::cout << std::endl << "+ /f or /file=\"filename.txt\"";
+	std::cout << std::endl << "+ /p or /password=\"password\"";
+	// для динамического добавления алгортимов здесь надо как-то автоматизировать вывод информации об алгоритмах в наличии
+	std::cout << std::endl << "+ [/m or /method=(1:CEASER,2:DES, 3:AES)] // default - CEASER";
+	std::cout << std::endl << "+ [/n or /name=\"new_filename\"] //default name=\"#filename_encrypt_#algorithm\"]";
+	std::cout << std::endl << "+ [/r or /regime=1] copy mode (origin save)";
+	std::cout << std::endl << "+ [/r or /regime=2] overwrite mode //default";
 
-	std::cout << std::endl << "--- Decryption";
-	std::cout << std::endl << "/action=2:decryption";
-	std::cout << std::endl << "+ /path=\"filename.txt\"";
-	std::cout << std::endl << "+ /password=\"password\"";
-	std::cout << std::endl << "+ [/name=\"new_file_name\"] // default name=\"#filename_decrypt_#algorithm\"]";
+
+	std::cout << std::endl << "\n--- Decryption";
+	std::cout << std::endl << "  /a or /action=2:decryption";
+	std::cout << std::endl << "+ /f or /file=\"filename.txt\"";
+	std::cout << std::endl << "+ [/m or /method=(1:CEASER,2:DES, 3:AES)] // default - CEASER";
+	std::cout << std::endl << "+ /p or /password=\"password\"";
+	std::cout << std::endl << "+ [/n or /name=\"new_file_name\"] // default name=\"#filename_decrypt_#method\"]\n\n";
 	std::cout << std::endl << std::endl;
+	//std::cout << std::endl << "All parametrs could be used in short form";
+	//std::cout << std::endl << "/action= -> /a=\t/file= -> /f=\t/password= -> /p=\n/method= -> /m=\t/name= -> /n=";
+
 }
 
 CodeCore::Crypto_Interface* InputHandle::Controller::_algo_type_handler(const Arguments::_AlgoType& _type)
@@ -96,8 +103,9 @@ bool InputHandle::Controller::Do_action(const Arguments* current_arguments, Code
 	{
 	case Arguments::_ActionType::encrypt:
 	{
-		FileCore::Encrypt_Stream encrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name);
+		FileCore::Encrypt_Stream encrypt_stream_maker(current_arguments->_path_to_read, current_arguments->_new_name, current_arguments->_overwright_regime);
 		bool status = crypto_obj_ptr->Encrypt(encrypt_stream_maker.Get_read_stream(), encrypt_stream_maker.Get_write_stream());
+		if (encrypt_stream_maker.is_overwrite_mode()) encrypt_stream_maker.delete_origin();
 		std::cout << (status ? "\nEncryption succesfull\n" : "\nEncryption failed\n");
 		break;
 	}

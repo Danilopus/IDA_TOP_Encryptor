@@ -1,9 +1,10 @@
 ﻿#include "FileCore.h"
 
-FileCore::Encrypt_Stream::Encrypt_Stream(const std::string path, const std::string new_name)
+FileCore::Encrypt_Stream::Encrypt_Stream(const std::string path, const std::string new_name, bool _overwright_regime): _OVERWRITE_FLAG_(_overwright_regime)
 {
 	ifstream_ptr = &(Get_read_stream(path));
 	ofstream_ptr = &(Get_write_stream(new_name));
+	_read_path = path;
 }
 
 FileCore::Encrypt_Stream::~Encrypt_Stream()
@@ -16,9 +17,7 @@ std::ofstream& FileCore::Encrypt_Stream::Get_write_stream(std::string new_name)
 {
 	if (_DEFAULT_NAMES_FLAG_)
 	{
-		//new_name = new_name.substr(new_name.find("_") + 1);
-		//new_name.insert(0, "default_sample.txt_");
-		new_name = "default_sample.txt_crypted.txt";
+		new_name = "default_sample.txt_crypt.txt";
 	}
 	std::ofstream& ostream_obj = *new std::ofstream(new_name, std::ios::out);
 	if (ostream_obj.is_open())
@@ -33,14 +32,26 @@ std::ifstream& FileCore::Encrypt_Stream::Get_read_stream(std::string path_to_rea
 		return istream_obj;
 	else
 	{
-		std::ofstream test_file_stream("default_sample.txt");
+		std::ofstream test_file_stream(_default_name);
 		if (test_file_stream.is_open())
 			test_file_stream << "Defualt generated test file with test text, just because cannot open " << path_to_read;
 		test_file_stream.close();
 		std::cout << "\nCouldn't open " << path_to_read << " - default generated\n";
 		_DEFAULT_NAMES_FLAG_ = true;
 	}
-	return Get_read_stream("default_sample.txt");
+	return Get_read_stream(_default_name);
+}
+
+bool FileCore::Encrypt_Stream::is_overwrite_mode()
+{
+	return _OVERWRITE_FLAG_;
+}
+
+void FileCore::Encrypt_Stream::delete_origin()
+{
+	if (ifstream_ptr->is_open()) ifstream_ptr->close();
+	if (_DEFAULT_NAMES_FLAG_) std::remove(_default_name.c_str());
+	else std::remove(_read_path.c_str());
 }
 
 FileCore::Decrypt_Stream::~Decrypt_Stream()

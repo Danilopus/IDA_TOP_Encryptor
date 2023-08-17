@@ -1,4 +1,5 @@
 ﻿#include "Arguments.h"
+#include <algorithm>
 
 InputHandle::Arguments::Arguments(int argc, char* argv[])
 {
@@ -9,13 +10,32 @@ InputHandle::Arguments::Arguments(int argc, char* argv[])
 	if (arguments_vec.size()) _application_path = arguments_vec[0];
 	else return;
 
-	_action_type = static_cast<Arguments::_ActionType>(Initialise("/action", 1));
-	_path_to_read = Initialise("/path");
-	_password = Initialise("/password");
-	_algo_type = static_cast<Arguments::_AlgoType>(Initialise("/algo", 1));
-	_new_name = Initialise("/name");
+	int just_int_parametr{0};
+	int result = Initialise("/action", just_int_parametr);
+	if (result == -1)
+		result = Initialise("/a", just_int_parametr);
+	_action_type = static_cast<Arguments::_ActionType>(--result);
+	
+	_path_to_read = Initialise("/file");
+	if (_path_to_read=="")	_path_to_read = Initialise("/f");
 
-	//Are_Arguments_valid();
+	_password = Initialise("/password");
+	if (_password == "")	_password = Initialise("/p");
+
+	
+	result = Initialise("/method", just_int_parametr);
+	if (result == -1)
+		result = Initialise("/m", just_int_parametr);
+	_algo_type = static_cast<Arguments::_AlgoType>(result);
+
+	_new_name = Initialise("/name");
+	if (_new_name == "")	_new_name = Initialise("/n");
+
+	result = Initialise("/regime", just_int_parametr);
+	if (result == -1)
+		result = Initialise("/r", just_int_parametr);
+	_overwright_regime = result;
+
 }
 
 int InputHandle::Arguments::Initialise(std::string str, int)
@@ -24,15 +44,35 @@ int InputHandle::Arguments::Initialise(std::string str, int)
 	{
 		if (arguments_vec[i].find(str) != std::string::npos)
 		{
-			size_t substr_begin = arguments_vec[i].find("=", (arguments_vec[i].find(str) + str.size()));
-			size_t substr_length = 1;
-			str = arguments_vec[i].substr(++substr_begin, substr_length);
-			//return std::stoi(arguments_vec[i].substr(substr_begin, substr_length));
-			//return std::atoi(str.c_str());
-			return str == "" ? 0 : (std::stoi(str) - 1);
+			// Ищем в строке знак =
+			int substr_begin = arguments_vec[i].find("=", (arguments_vec[i].find(str) + str.size()));
+			// И все после этого знака (для этого инкеремент) читаем в возвращаемую строку			
+			std::string result = arguments_vec[i].substr(++substr_begin);
+			if (result == "") return -1;
+			if(has_only_digits(result)) return (std::stoi(result) - 1);			
+			to_lower(result);
+			if (result == "encryption") return 1;
+			if (result == "decryption") return 2;
+
+	
+
+			
 		}
 	}
-	return 0;
+	return -1;
+}
+bool InputHandle::Arguments::has_only_digits(const std::string& s)
+{
+	return (s.find_first_not_of("0123456789") == std::string::npos);
+}
+void InputHandle::Arguments::to_lower(std::string& temp_str)
+{
+	std::for_each(
+		temp_str.begin(),
+		temp_str.end(),
+		[](char& c) {
+			c = ::tolower(c);
+		});
 }
 
 std::string InputHandle::Arguments::Initialise(const std::string& str)
@@ -41,11 +81,9 @@ std::string InputHandle::Arguments::Initialise(const std::string& str)
 	{
 		if (arguments_vec[i].find(str) != std::string::npos)
 		{
-			// Куда-то проподают кавычки из параметров командной строки
-			//size_t substr_begin = arguments_vec[i].find("\"", (arguments_vec[i].find(str) + str.size()));
-			size_t substr_begin = arguments_vec[i].find("=", (arguments_vec[i].find(str) + str.size()));
-			//size_t substr_length = arguments_vec[i].rfind("\"");
-			//return arguments_vec[i].substr(++substr_begin, substr_length);
+			// Ищем в строке знак =
+			size_t substr_begin = arguments_vec[i].find("=", (arguments_vec[i].find(str) + str.size()));		
+			// И все после этого знака (для этого инкеремент) читаем в возвращаемую строку
 			return arguments_vec[i].substr(++substr_begin);
 		}
 	}
@@ -73,7 +111,7 @@ bool InputHandle::Arguments::Are_Arguments_valid()
 {
 	if (_path_to_read == "")
 	{
-		std::cout << "\nObligatory /path parameter is missed\n";
+		std::cout << "\nObligatory /file parameter is missed\n";
 		throw 1;
 	}
 	if (_password == "")
@@ -82,9 +120,13 @@ bool InputHandle::Arguments::Are_Arguments_valid()
 		throw 1;
 	}
 	// Если новое имя пустое - задаем значение по умолчанию
-	std::string _ActionType_AlgoType;
 	if (_new_name == "")
+		_new_name = Name_by_default();
+	
+}
+	std::string InputHandle::Arguments::Name_by_default()
 	{
+		std::string _ActionType_AlgoType;
 		switch (_algo_type)
 		{
 		case _AlgoType::CEASER: _ActionType_AlgoType = "CEASER"; break;
@@ -100,12 +142,9 @@ bool InputHandle::Arguments::Are_Arguments_valid()
 			_ActionType_AlgoType = _ActionType_AlgoType.insert(0, "_decrypt_");
 			break;
 		}
-		//_new_name = _path_to_read.substr(0, _path_to_read.find(".")) + _ActionType_AlgoType + ".txt";
-		//int extension_offset = (_path_to_read.rfind(".") == std::string::npos) ? 0 : _path_to_read.rfind(".");
-		//std::string extension = extension_offset ? _path_to_read.substr(extension_offset): "";
-		//_new_name = _path_to_read.substr(0, _path_to_read.rfind(".")) + _ActionType_AlgoType + extension;
-		_new_name = _path_to_read + _ActionType_AlgoType + ".txt"; // отладочная версия генерации имени для удобства открытия блокнотом
-		//_new_name = _path_to_read + _ActionType_AlgoType; // основная версия генерации имени
-
+		// отладочная версия генерации имени для удобства открытия блокнотом
+		return (_path_to_read + _ActionType_AlgoType + ".txt");
+		// основная версия генерации имени
+		//_new_name = _path_to_read + _ActionType_AlgoType; 
 	}
-}
+

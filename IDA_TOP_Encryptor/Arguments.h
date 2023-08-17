@@ -19,6 +19,7 @@ namespace InputHandle
 		std::string _password;
 		enum class _AlgoType {  CEASER, DES, AES, help	} _algo_type = _AlgoType::CEASER;
 		std::string _new_name;
+		bool _overwright_regime;
 		//public:
 		std::vector <std::string> arguments_vec;
 		Arguments(int argc, char* argv[]);
@@ -26,6 +27,10 @@ namespace InputHandle
 		std::string Initialise(const std::string& str);
 		std::string Initialise(std::string& str);
 		bool Are_Arguments_valid();
+		std::string Name_by_default();
+		bool has_only_digits(const std::string& s);
+		void to_lower(std::string& temp_str);
+
 	};
 
 }
